@@ -118,7 +118,7 @@ class GTSRBLoader():
     print('processing test images')
     test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height)
     
-    print('done processing, creating, train/valid/test split')
+    print('done processing, creating train/val/test split')
     X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, self.train_labels, test_size=0.3, random_state=42, shuffle=True)
     X_test = test_imgs_processed
     y_test = self.test_labels
