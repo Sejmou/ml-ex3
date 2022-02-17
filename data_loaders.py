@@ -45,7 +45,7 @@ def read_traffic_signs(rootpath: str, test_label_csv_path=None):
         # loop over all images in current annotations file
         for row in gtReader:
             images.append(plt.imread(f'{rootpath}/{row[0]}')) # the 1th column is the filename
-            labels.append(row[7]) # the 8th column is the label
+            labels.append(int(row[7])) # the 8th column is the label
 
     else: # training set; all images in one folder, separate .csv file with labels (expected to be in same dir)
       # loop over 42 classes (each in own subdirectory)
@@ -57,7 +57,7 @@ def read_traffic_signs(rootpath: str, test_label_csv_path=None):
             # loop over all images in current annotations file
             for row in gtReader:
                 images.append(plt.imread(prefix + row[0])) # the 1th column is the filename
-                labels.append(row[7]) # the 8th column is the label
+                labels.append(int(row[7])) # the 8th column is the label
 
     return images, labels
 
@@ -124,7 +124,7 @@ class GTSRBLoader():
     X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, np.array(train_labels), test_size=0.3, random_state=42, shuffle=True)
 
     X_test = test_imgs_processed
-    y_test = np.array(test_labels).astype(int)
+    y_test = np.array(test_labels)
 
     return X_train, X_val, X_test, y_train, y_val, y_test
 
