@@ -126,6 +126,7 @@ class GTSRBLoader():
     X_test = test_imgs_processed
     y_test = np.array(test_labels)
 
+    print('done')
     return X_train, X_val, X_test, y_train, y_val, y_test
 
     
