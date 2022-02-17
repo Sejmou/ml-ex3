@@ -59,7 +59,7 @@ def read_traffic_signs(rootpath: str, test_label_csv_path=None):
                 images.append(plt.imread(prefix + row[0])) # the 1th column is the filename
                 labels.append(int(row[7])) # the 8th column is the label
 
-    return images, labels
+    return images, np.array(labels)
 
 def resize_img(img_arr, width, height):
   img = Image.fromarray(img_arr, 'RGB')
@@ -89,12 +89,13 @@ class GTSRBLoader():
     self.train_path = f'{self.data_path}/GTSRB/Final_Training/Images'
     self.test_path = f'{self.data_path}/GTSRB/Final_Test/Images'
     self.test_label_csv_path = f'{self.data_path}/GT-final_test.csv'
+    self.__load_data()
 
   @property
   def __data_downloaded(self):
     return os.path.exists(f'{self.data_path}/{GTSRBLoader.DOWNLOAD_FINISHED_FILENAME}')
 
-  def load_data(self):
+  def __load_data(self):
     if not self.__data_downloaded:
       download_and_extract_zip(train_link, self.data_path)
       download_and_extract_zip(test_labels_link, self.data_path)
@@ -106,27 +107,22 @@ class GTSRBLoader():
       print('GTSRB dataset already downloaded, loading files from memory')
 
     print('loading training images and labels')
-    train_imgs, train_labels = read_traffic_signs(self.train_path)
+    self.train_imgs, self.train_labels = read_traffic_signs(self.train_path)
     print('loading test images and labels')
-    test_imgs, test_labels = read_traffic_signs(self.test_path, self.test_label_csv_path)
-
-    NUM_CATEGORIES = len(os.listdir(self.train_path))
-
-    IMG_HEIGHT = 32
-    IMG_WIDTH = 32
-    COLOR_CHANNELS = 3
-
-    print('processing training images')
-    train_imgs_processed = process_imgs(train_imgs, IMG_WIDTH, IMG_HEIGHT)
-    print('processing test images')
-    test_imgs_processed = process_imgs(test_imgs, IMG_WIDTH, IMG_HEIGHT)
-
-    X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, np.array(train_labels), test_size=0.3, random_state=42, shuffle=True)
-
-    X_test = test_imgs_processed
-    y_test = np.array(test_labels)
-
+    self.test_imgs, self.test_labels = read_traffic_signs(self.test_path, self.test_label_csv_path)
     print('done')
+
+  def get_processed_imgs(self, target_width, target_height):
+    print('processing training images')
+    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height)
+    print('processing test images')
+    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height)
+    
+    print('done processing, creating, train/valid/test split')
+    X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, self.train_labels, test_size=0.3, random_state=42, shuffle=True)
+    X_test = test_imgs_processed
+    y_test = self.test_labels
+    
     return X_train, X_val, X_test, y_train, y_val, y_test
 
     
