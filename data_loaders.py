@@ -102,8 +102,12 @@ class GTSRBLoader():
       with open(f'{self.data_path}/{GTSRBLoader.DOWNLOAD_FINISHED_FILENAME}', 'w') as f:
         f.write(f'Data download finished {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
       print('Finished downloading required files for GTSRB dataset')
+    else:
+      print('GTSRB dataset already downloaded, loading files from memory')
 
+    print('loading training images and labels')
     train_imgs, train_labels = read_traffic_signs(self.train_path)
+    print('loading test images and labels')
     test_imgs, test_labels = read_traffic_signs(self.test_path, self.test_label_csv_path)
 
     NUM_CATEGORIES = len(os.listdir(self.train_path))
@@ -112,7 +116,9 @@ class GTSRBLoader():
     IMG_WIDTH = 32
     COLOR_CHANNELS = 3
 
+    print('processing training images')
     train_imgs_processed = process_imgs(train_imgs, IMG_WIDTH, IMG_HEIGHT)
+    print('processing test images')
     test_imgs_processed = process_imgs(test_imgs, IMG_WIDTH, IMG_HEIGHT)
 
     X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, np.array(train_labels), test_size=0.3, random_state=42, shuffle=True)
