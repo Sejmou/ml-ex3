@@ -126,9 +126,9 @@ class GTSRBLoader(BaseDataLoader):
       print('GTSRB dataset already downloaded, loading files from memory')
 
     print('loading training images and labels')
-    self.train_imgs, self.train_labels = self._read_traffic_signs(train_path)
+    self.train_imgs, self.train_labels = GTSRBLoader._read_traffic_signs(train_path)
     print('loading test images and labels')
-    self.test_imgs, self.test_labels = self._read_traffic_signs(test_path, test_label_csv_path)
+    self.test_imgs, self.test_labels = GTSRBLoader._read_traffic_signs(test_path, test_label_csv_path)
     print('done')
 
   def get_processed_imgs(self, target_width, target_height):
@@ -145,6 +145,7 @@ class GTSRBLoader(BaseDataLoader):
     return X_train, X_val, X_test, y_train, y_val, y_test
 
   # this code is adapted from http://benchmark.ini.rub.de/Dataset/GTSRB_Python_code.zip
+  @staticmethod
   def _read_traffic_signs(rootpath: str, test_label_csv_path=None):
     '''Reads traffic sign data for German Traffic Sign Recognition Benchmark.
 
@@ -168,7 +169,7 @@ class GTSRBLoader(BaseDataLoader):
     else: # training set; all images in one folder, separate .csv file with labels (expected to be in same dir)
       # loop over 42 classes (each in own subdirectory)
       for c in range(0,43):
-          print(f'loading images for class {c}')
+          #print(f'loading images for class {c}')
           prefix = rootpath + '/' + format(c, '05d') + '/' # subdirectory for class
           with open(prefix + 'GT-'+ format(c, '05d') + '.csv') as gtFile: # annotations file
             gtReader = csv.reader(gtFile, delimiter=';') # csv parser for annotations file
@@ -235,6 +236,15 @@ class CIFAR10Loader(BaseDataLoader):
     self.test_imgs, self.test_labels = CIFAR10Loader._get_batch_imgs_and_labels(test_batch)
     print('done')
 
+  @staticmethod
+  def _get_batch_imgs_and_labels(batch):
+    # note: each batch is a dictionary, its keys are byte strings!
+    data = batch.get(b'data')
+    imgs = CIFAR10Loader._reshape_batch_data(data)
+    labels = np.array(batch.get(b'labels'))
+    return imgs, labels
+
+  @staticmethod
   def _reshape_batch_data(batch_data):
     '''
     Reshapes the batch data from n x 3072 to n x 32 x 32 x 3
@@ -253,10 +263,3 @@ class CIFAR10Loader(BaseDataLoader):
     # so, the below call gives us exactly the desired shape: (n, 32, 32, 3)!
     res = res.transpose(0,2,3,1)
     return res
-
-  def _get_batch_imgs_and_labels(batch):
-    # note: each batch is a dictionary, its keys are byte strings!
-    data = batch.get(b'data')
-    imgs = CIFAR10Loader._reshape_batch_data(data)
-    labels = np.array(batch.get(b'labels'))
-    return imgs, labels
