@@ -41,3 +41,5 @@ for i in range(3):
 
 for i in range(3, 6):
   show_img(GTSRB_data[i][0])
+
+plt.show()

@@ -115,7 +115,7 @@ class GTSRBLoader(BaseDataLoader):
   def _load_data(self):
     train_path = f'{self._data_path}/GTSRB/Final_Training/Images'
     test_path = f'{self._data_path}/GTSRB/Final_Test/Images'
-    test_label_csv_path = f'{train_path}/GT-final_test.csv'
+    test_label_csv_path = f'{self.data_path}/GT-final_test.csv'
 
     if not self._data_downloaded:
       download_and_extract_zip(self.train_link, self._data_path)
