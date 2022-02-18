@@ -69,7 +69,7 @@ class BaseDataLoader():
   def _confirm_successful_download(self):
     with open(f'{self._data_path}/{self.DOWNLOAD_FINISHED_FILENAME}', 'w') as f:
       f.write(f'\Data download finished {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}')
-    print('Finished downloading required files for {self.DATA} dataset')
+    print(f'Finished downloading required files for {self.DATASET_NAME} dataset')
 
   def _load_data(self):
     """Retrieves data and stores it in object properties (if data already present locally, loads those files, else downloads data from the web)
