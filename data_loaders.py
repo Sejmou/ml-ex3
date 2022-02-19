@@ -1,4 +1,5 @@
 from io import BytesIO
+from lib2to3.pytree import convert
 from zipfile import ZipFile
 import requests
 import tarfile
@@ -28,6 +29,12 @@ def resize_img(img_arr, width, height):
   return np.array(resized_img)
 
 def process_imgs(imgs, target_width, target_height, normalize=True, convert_to_grayscale=False):
+  '''
+  Processes a NumPy array of images
+
+  Expects NumPy array of shape (no. of images x image width x image height x no. of image channels)
+  '''
+
   # resize all images to provided target width + height
   # store in 3D NumPy array
   imgs_processed = np.array([resize_img(img, target_width, target_height) for img in imgs])
@@ -37,6 +44,9 @@ def process_imgs(imgs, target_width, target_height, normalize=True, convert_to_g
     max_val = imgs_processed.max()
     min_val = imgs_processed.min()
     imgs_processed= (imgs_processed - min_val)/(max_val - min_val)
+
+  if convert_to_grayscale:
+    imgs_processed = np.mean(imgs_processed, axis=3)
 
   return imgs_processed
 
@@ -77,7 +87,7 @@ class BaseDataLoader():
     """
     raise NotImplementedError()#TODO: could play around with abstract base classes (newer Python feature, abc module), probably completely overkill!
 
-  def get_processed_imgs(self, target_width, target_height, normalize=True):
+  def get_processed_imgs(self, target_width, target_height, normalize=True, convert_to_grayscale=False):
     """Returns images + labels of the dataset in a train/test/val split.
 
      X_train, X_test, X_val, y_train, y_test, y_val are all NumPy arrays.
@@ -88,9 +98,9 @@ class BaseDataLoader():
     """
 
     print('processing training images')
-    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height, normalize=normalize)
+    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height, normalize=normalize, convert_to_grayscale=convert_to_grayscale)
     print('processing test images')
-    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height, normalize=normalize)
+    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height, normalize=normalize, convert_to_grayscale=convert_to_grayscale)
     
     print('done processing, creating train/val/test split')
     X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, self.train_labels, test_size=0.3, random_state=42, shuffle=True)

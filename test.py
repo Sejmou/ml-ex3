@@ -70,12 +70,12 @@ def plot_first_img_from_data(data, data_name, ax=None):
   print(f'shape: {img_data.shape}\n')
   show_img(img_data, ax=ax)
 
-CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False)
+CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
 
 check_loaded_data(CIFAR10_data, 'CIFAR-10')
 
 
-GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False)
+GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
 
 check_loaded_data(GTSRB_data, 'GTSRB')
 
