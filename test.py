@@ -1,5 +1,6 @@
 from data_loaders import CIFAR10Loader, GTSRBLoader
 import matplotlib.pyplot as plt
+import numpy as np
 
 def show_img(img_arr, ax=None):
   if ax:
@@ -20,6 +21,12 @@ def check_loaded_data(data, dataset_name):
     if not (shape == None): print(val.shape)
     else: print(f'Warning: Expected property "shape", but it was not present!')
   print()
+
+  all_imgs = np.concatenate(data[:3])
+  print('Image stats:')
+  print(f'shape: {all_imgs.shape}')
+  print(f'Max value across all images and channels: {all_imgs.max()}')
+  print(f'Min value across all images and channels: {all_imgs.min()}')
 
   split_sizes = [get_length(data_split) for data_split in data[:3]]
   train_size, val_size, test_size = split_sizes
@@ -63,12 +70,12 @@ def plot_first_img_from_data(data, data_name, ax=None):
   print(f'shape: {img_data.shape}\n')
   show_img(img_data, ax=ax)
 
-CIFAR10_data = CIFAR10Loader('../data/CIFAR-10').get_processed_imgs(42, 42)
+CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False)
 
 check_loaded_data(CIFAR10_data, 'CIFAR-10')
 
 
-GTSRB_data = GTSRBLoader('../data').get_processed_imgs(42, 42)
+GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False)
 
 check_loaded_data(GTSRB_data, 'GTSRB')
 

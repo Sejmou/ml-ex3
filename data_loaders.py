@@ -27,15 +27,16 @@ def resize_img(img_arr, width, height):
   resized_img = img.resize((width, height))
   return np.array(resized_img)
 
-def process_imgs(imgs, target_width, target_height):
+def process_imgs(imgs, target_width, target_height, normalize=True, convert_to_grayscale=False):
   # resize all images to provided target width + height
   # store in 3D NumPy array
   imgs_processed = np.array([resize_img(img, target_width, target_height) for img in imgs])
 
-  # normalize values to [0, 1] range
-  max_val = imgs_processed.max()
-  min_val = imgs_processed.min()
-  imgs_processed= (imgs_processed - min_val)/(max_val - min_val)
+  if normalize:
+    # normalize values to [0, 1] range
+    max_val = imgs_processed.max()
+    min_val = imgs_processed.min()
+    imgs_processed= (imgs_processed - min_val)/(max_val - min_val)
 
   return imgs_processed
 
@@ -76,7 +77,7 @@ class BaseDataLoader():
     """
     raise NotImplementedError()#TODO: could play around with abstract base classes (newer Python feature, abc module), probably completely overkill!
 
-  def get_processed_imgs(self, target_width, target_height):
+  def get_processed_imgs(self, target_width, target_height, normalize=True):
     """Returns images + labels of the dataset in a train/test/val split.
 
      X_train, X_test, X_val, y_train, y_test, y_val are all NumPy arrays.
@@ -87,9 +88,9 @@ class BaseDataLoader():
     """
 
     print('processing training images')
-    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height)
+    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height, normalize=normalize)
     print('processing test images')
-    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height)
+    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height, normalize=normalize)
     
     print('done processing, creating train/val/test split')
     X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, self.train_labels, test_size=0.3, random_state=42, shuffle=True)
@@ -130,19 +131,6 @@ class GTSRBLoader(BaseDataLoader):
     print('loading test images and labels')
     self.test_imgs, self.test_labels = GTSRBLoader._read_traffic_signs(test_path, test_label_csv_path)
     print('done')
-
-  def get_processed_imgs(self, target_width, target_height):
-    print('processing training images')
-    train_imgs_processed = process_imgs(self.train_imgs, target_width, target_height)
-    print('processing test images')
-    test_imgs_processed = process_imgs(self.test_imgs, target_width, target_height)
-    
-    print('done processing, creating train/val/test split')
-    X_train, X_val, y_train, y_val = train_test_split(train_imgs_processed, self.train_labels, test_size=0.3, random_state=42, shuffle=True)
-    X_test = test_imgs_processed
-    y_test = self.test_labels
-    
-    return X_train, X_val, X_test, y_train, y_val, y_test
 
   # this code is adapted from http://benchmark.ini.rub.de/Dataset/GTSRB_Python_code.zip
   @staticmethod
