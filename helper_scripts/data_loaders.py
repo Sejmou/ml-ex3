@@ -46,7 +46,9 @@ def process_imgs(imgs, target_width, target_height, normalize=True, convert_to_g
     imgs_processed= (imgs_processed - min_val)/(max_val - min_val)
 
   if convert_to_grayscale:
-    imgs_processed = np.mean(imgs_processed, axis=3)
+    # convert using "Standard" RGB to grayscale conversion: https://stackoverflow.com/q/687261/13727176
+    r, g, b = imgs_processed[:,:,:,0], imgs_processed[:,:,:,1], imgs_processed[:,:,:,2]# 4th dimension stores color channels
+    imgs_processed = 0.2989 * r + 0.5870 * g + 0.1140 * b
 
   return imgs_processed
 

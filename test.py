@@ -1,12 +1,19 @@
-from data_loaders import CIFAR10Loader, GTSRBLoader
+from helper_scripts.data_loaders import CIFAR10Loader, GTSRBLoader
 import matplotlib.pyplot as plt
 import numpy as np
 
 def show_img(img_arr, ax=None):
+  grayscale = img_arr.ndim == 2
   if ax:
-    ax.imshow(img_arr)
+    if grayscale:
+      ax.imshow(img_arr, cmap='gray', vmin=0, vmax=255)#https://stackoverflow.com/a/3823822/13727176
+    else: 
+      ax.imshow(img_arr)
   else:
-    plt.imshow(img_arr)
+    if grayscale:
+      plt.imshow(img_arr, cmap='gray', vmin=0, vmax=255)
+    else: 
+      plt.imshow(img_arr)
 
 def check_loaded_data(data, dataset_name):
   print(f'\n--- Checking loaded {dataset_name} data ---')
