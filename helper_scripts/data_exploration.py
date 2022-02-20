@@ -73,7 +73,7 @@ def print_dataset_summary(data, dataset_name):
 
 
 
-def file_and_folder_overview(startpath):# adapted from https://stackoverflow.com/a/9728478/13727176
+def file_and_folder_overview(startpath, exclude_hidden = True):# adapted from https://stackoverflow.com/a/9728478/13727176
   '''
   Helper function for getting overview of files/folders within given startpath (incl. subfolders and containing files)
 
@@ -87,6 +87,13 @@ def file_and_folder_overview(startpath):# adapted from https://stackoverflow.com
     return extension, filename
 
   for root, dirs, files in os.walk(startpath):
+    if exclude_hidden:
+      if '.git' in root: #content of .git is not very interesting for our purposes...
+        continue
+      # https://stackoverflow.com/a/13454267/13727176
+      files = [f for f in files if not f[0] == '.']
+      dirs[:] = [d for d in dirs if not d[0] == '.']
+
     dirs = dirs.sort() 
 
     files_by_extension = defaultdict(list)

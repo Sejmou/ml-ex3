@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 
 from helper_scripts.data_loaders import CIFAR10Loader, GTSRBLoader
-from helper_scripts.data_exploration import print_dataset_summary, show_img, data_idx_to_desc
+from helper_scripts.data_exploration import print_dataset_summary, show_img, data_idx_to_desc, file_and_folder_overview
+
+file_and_folder_overview('.')
 
 CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
 GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
