@@ -15,7 +15,7 @@ def show_img(img_arr, ax=None):
       plt.imshow(img_arr)
 
 #maps indices of data returned from data loader to text description of the respective data
-index_to_data_part = {
+data_idx_to_desc = {
   0: 'X_train',
   1: 'X_val',
   2: 'X_test',
@@ -33,17 +33,20 @@ def get_ratio_rounded(part, total):
   return round(part/total, 2)
 
 def print_dataset_summary(data, dataset_name):
+  if len(data) != 6:
+    raise ValueError('Expected tuple of 6 values (X_train, X_val, X_test, y_train, y_val, y_test) as argument for "data"')
+
   print(f'\n--- Checking loaded {dataset_name} data ---')
-  print('data types')
-  for val in data:
-    print(type(val))
+  print('Data types')
+  for i, val in enumerate(data):
+    print(f'{data_idx_to_desc[i]}: {type(val)}')
   print()
 
-  print('data shapes')
-  for val in data:
+  print('Data shapes')
+  for i, val in enumerate(data):
     shape = getattr(val, 'shape', None)
-    if not (shape == None): print(val.shape)
-    else: print(f'Warning: Expected property "shape", but it was not present!')
+    if not (shape == None): print(f'{data_idx_to_desc[i]}: {shape}')
+    else: print(f'{data_idx_to_desc[i]}: Expected property "shape", but it was not present! len() is {len(val)}')
   print()
 
   all_imgs = np.concatenate(data[:3])
@@ -55,7 +58,7 @@ def print_dataset_summary(data, dataset_name):
   split_sizes = [get_length(data_split) for data_split in data[:3]]
   train_size, val_size, test_size = split_sizes
   total_size = sum(split_sizes)
-  print('split sizes:')
+  print('Split sizes:')
   print(f'{train_size=}, {val_size=}, {test_size=}')
   print(f'Total dataset size: {total_size}')
   print()

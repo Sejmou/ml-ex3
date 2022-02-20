@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from helper_scripts.data_loaders import CIFAR10Loader, GTSRBLoader
-from helper_scripts.data_exploration import print_dataset_summary, show_img, index_to_data_part
+from helper_scripts.data_exploration import print_dataset_summary, show_img, data_idx_to_desc
 
 CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
 GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
@@ -26,12 +26,12 @@ def plot_first_img_from_data(data, data_name, ax=None):
 
 print('\nPlotting example images from CIFAR-10')
 for i in range(3):
-  plot_first_img_from_data(CIFAR10_data[i], index_to_data_part[i], ax[i])
+  plot_first_img_from_data(CIFAR10_data[i], data_idx_to_desc[i], ax[i])
 
 print('\nPlotting example images from GTSRB')
 for i in range(3, 6):
   data_idx = i - 3
   ax_idx = i
-  plot_first_img_from_data(GTSRB_data[data_idx], index_to_data_part[data_idx], ax[ax_idx])
+  plot_first_img_from_data(GTSRB_data[data_idx], data_idx_to_desc[data_idx], ax[ax_idx])
 
 plt.show()
