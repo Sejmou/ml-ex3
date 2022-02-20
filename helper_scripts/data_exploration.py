@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+from collections import defaultdict
 
 def show_img(img_arr, ax=None):
   grayscale = img_arr.ndim == 2
@@ -68,3 +70,41 @@ def print_dataset_summary(data, dataset_name):
   train_and_val_size = train_size + val_size
   print('Train/Val ratio:' + f"{get_ratio_rounded(train_size, train_and_val_size)}/{get_ratio_rounded(val_size, train_and_val_size)}")
   print('(Train+Val)/Test ratio:' + f"{get_ratio_rounded(train_and_val_size, total_size)}/{get_ratio_rounded(test_size, total_size)}")
+
+
+
+def file_and_folder_overview(startpath):# adapted from https://stackoverflow.com/a/9728478/13727176
+  '''
+  Helper function for getting overview of files/folders within given startpath (incl. subfolders and containing files)
+
+  Prints the tree of (sub-)directories and files in recusive fashion, starting from startpath.
+  For output readability reasons, at max. 5 files of the same file extension are displayed (the number of remaining files of the same file extension is also printed)
+  '''
+
+  def get_file_extension_and_name(filename):
+    file_and_extension = filename.split(sep='.')
+    extension = file_and_extension[-1] if len(file_and_extension) > 1 else '(No extension)'
+    return extension, filename
+
+  for root, dirs, files in os.walk(startpath):
+    dirs = dirs.sort() 
+
+    files_by_extension = defaultdict(list)
+    for ext, filename in [get_file_extension_and_name(f) for f in files]:
+      files_by_extension[ext].append(filename)
+
+    level = root.replace(startpath, '').count(os.sep)
+    indent = ' ' * 4 * (level)
+    print('{}{}/'.format(indent, os.path.basename(root)))
+
+    subindent = ' ' * 4 * (level + 1)
+
+    for ext, files in files_by_extension.items():
+      filtered_files = files[:5]
+      
+      for f in filtered_files:
+        print('{}{}'.format(subindent, f))
+      if len(files) > len(filtered_files):
+        remaining_files = len(files) - len(filtered_files)
+        more_text = f'... and {remaining_files} other .{ext} files'
+        print('{}{}'.format(subindent, more_text))
