@@ -7,7 +7,7 @@ def show_img(img_arr, ax=None):
   grayscale = img_arr.ndim == 2
   if ax:
     if grayscale:
-      ax.imshow(img_arr, cmap='gray', vmin=0, vmax=255)#https://stackoverflow.com/a/3823822/13727176
+      ax.imshow(img_arr, cmap='gray', vmin=img_arr.min(), vmax=img_arr.max())#https://stackoverflow.com/a/3823822/13727176
     else: 
       ax.imshow(img_arr)
   else:
