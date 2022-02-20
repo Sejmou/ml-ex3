@@ -59,7 +59,7 @@ def print_dataset_summary(data, dataset_name):
   train_size, val_size, test_size = split_sizes
   total_size = sum(split_sizes)
   print('Split sizes:')
-  print(f'{train_size=}, {val_size=}, {test_size=}')
+  print(f' train size: {train_size}\nvalidation size: {val_size}\ntest size: {test_size=}')
   print(f'Total dataset size: {total_size}')
   print()
 
