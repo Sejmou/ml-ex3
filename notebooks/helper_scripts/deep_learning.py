@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from tensorflow import keras
+import time
 
 def plot_loss_and_acc(hist, epochs):
   '''
@@ -15,3 +17,14 @@ def plot_loss_and_acc(hist, epochs):
 
   plt.legend(loc='upper left', scatterpoints = 1, frameon=False)
   plt.show()
+
+  class TimeHistory(keras.callbacks.Callback):
+    def on_train_begin(self, logs={}):
+        self.times = []
+
+    def on_epoch_begin(self, batch, logs={}):
+        self.epoch_time_start = time.time()
+
+    def on_epoch_end(self, batch, logs={}):
+      epoch_fit_time = time.time() - self.epoch_time_start
+      self.times.append(epoch_fit_time)
