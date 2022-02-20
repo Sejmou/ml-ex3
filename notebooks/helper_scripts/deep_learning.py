@@ -30,7 +30,7 @@ def plot_loss_and_acc(hist, epochs):
       epoch_fit_time = time.perf_counter() - self.epoch_time_start
       self.times.append(epoch_fit_time)
 
-    def store_as_csv(self, filepath):
+    def save_fit_times_csv(self, filepath):
       return pd.Series(self.times, name='fit time').to_csv(filepath, index_label='epoch')
     
     @property
