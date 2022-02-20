@@ -12,7 +12,7 @@ def show_img(img_arr, ax=None):
       ax.imshow(img_arr)
   else:
     if grayscale:
-      plt.imshow(img_arr, cmap='gray', vmin=0, vmax=255)
+      plt.imshow(img_arr, cmap='gray', vmin=img_arr.min(), vmax=img_arr.max())
     else: 
       plt.imshow(img_arr)
 
