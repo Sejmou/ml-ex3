@@ -121,6 +121,7 @@ class BaseDataLoader():
   def text_label_dict(self):
     return self.TEXT_LABEL_DICT
 
+  @property
   def number_of_classes(self):
     return len(self.TEXT_LABEL_DICT)
 
