@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-from helper_scripts.data_loaders import CIFAR10Loader, GTSRBLoader
-from helper_scripts.data_exploration import print_dataset_summary, show_img, data_idx_to_desc, file_and_folder_overview
+from notebooks.helper_scripts.data_loaders import CIFAR10Loader, GTSRBLoader
+from notebooks.helper_scripts.data_exploration import print_dataset_summary, show_img, data_idx_to_desc, file_and_folder_overview
 
 file_and_folder_overview('.')
 
