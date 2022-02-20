@@ -3,16 +3,16 @@ import numpy as np
 import os
 from collections import defaultdict
 
-def show_img(img_arr, ax=None):
+def show_img(img_arr, ax=None, val_range_min=0, val_range_max=255):
   grayscale = img_arr.ndim == 2
   if ax:
     if grayscale:
-      ax.imshow(img_arr, cmap='gray', vmin=img_arr.min(), vmax=img_arr.max())#https://stackoverflow.com/a/3823822/13727176
+      ax.imshow(img_arr, cmap='gray', vmin=val_range_min, vmax=val_range_max)#https://stackoverflow.com/a/3823822/13727176
     else: 
       ax.imshow(img_arr)
   else:
     if grayscale:
-      plt.imshow(img_arr, cmap='gray', vmin=img_arr.min(), vmax=img_arr.max())
+      plt.imshow(img_arr, cmap='gray', vmin=val_range_min, vmax=val_range_max)
     else: 
       plt.imshow(img_arr)
 
