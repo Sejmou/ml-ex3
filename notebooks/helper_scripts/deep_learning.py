@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from tensorflow import keras
 import time
+import pandas as pd
 
 def plot_loss_and_acc(hist, epochs):
   '''
@@ -23,8 +24,15 @@ def plot_loss_and_acc(hist, epochs):
         self.times = []
 
     def on_epoch_begin(self, batch, logs={}):
-        self.epoch_time_start = time.time()
+        self.epoch_time_start = time.perf_counter()
 
     def on_epoch_end(self, batch, logs={}):
-      epoch_fit_time = time.time() - self.epoch_time_start
+      epoch_fit_time = time.perf_counter() - self.epoch_time_start
       self.times.append(epoch_fit_time)
+
+    def store_as_csv(self, filepath):
+      return pd.Series(self.times, name='fit time').to_csv(filepath, index_label='epoch')
+    
+    @property
+    def total_fit_time(self):
+      return sum(self.times)
