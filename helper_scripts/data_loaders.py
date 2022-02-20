@@ -1,5 +1,4 @@
 from io import BytesIO
-from lib2to3.pytree import convert
 from zipfile import ZipFile
 import requests
 import tarfile
@@ -11,8 +10,13 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-
 from sklearn.model_selection import train_test_split
+
+
+# This file contains utility data loader classes (for the CIFAR-10 and GTSRB datasets), as well as helper functions they use.
+# The data loaders download the data for the datasets from the internet and store them in the provided folder and load it into memory.
+# If the data has already been downloaded, the already downloaded data is loaded from the provided data folder.
+# Both data loaders were created after initial dataset exploration (for this check out the respective notebooks in the 'notebooks' folder).
 
 
 def download_and_extract_zip(url, target_dir):
