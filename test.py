@@ -5,8 +5,27 @@ from notebooks.helper_scripts.data_exploration import print_dataset_summary, sho
 
 file_and_folder_overview('.')
 
-CIFAR10_data = CIFAR10Loader('./data').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
-GTSRB_data = GTSRBLoader('./data/GTSRB').get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
+print(f'CIFAR-10 labels:')
+print(CIFAR10Loader.TEXT_LABEL_DICT)
+print()
+print(f'GTSRB labels')
+print(GTSRBLoader.TEXT_LABEL_DICT)
+print()
+
+CIFAR10_loader = CIFAR10Loader('./data')
+CIFAR10_data = CIFAR10_loader.get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
+GTSRB_loader =GTSRBLoader('./data/GTSRB')
+GTSRB_data = GTSRB_loader.get_processed_imgs(42, 42, normalize=False, convert_to_grayscale=True)
+
+print(f'CIFAR-10 labels from instance:')
+print(CIFAR10Loader.TEXT_LABEL_DICT)
+print(CIFAR10_loader.text_label_dict)
+
+print()
+print(f'GTSRB labels from instance')
+print(GTSRBLoader.TEXT_LABEL_DICT)
+print(GTSRB_loader.text_label_dict)
+
 
 print_dataset_summary(CIFAR10_data, 'CIFAR-10')
 print_dataset_summary(GTSRB_data, 'GTSRB')
